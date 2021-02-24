@@ -5,6 +5,15 @@ package("co")
 
     add_urls("https://github.com/idealvin/co.git")
 
+    on_load("windows", function (package)
+        assert(package:config("vs_runtime"):sub(1, 2) == "MD",
+            "co is built with MD runtime, cannot use MT")
+    end)
+
+    if is_plat("linux") then
+        add_syslinks("pthread", "dl")
+    end
+
     on_install("macosx", "linux", "windows", function (package)
         import("package.tools.xmake").install(package)
     end)
